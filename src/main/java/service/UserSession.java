@@ -27,7 +27,11 @@ public class UserSession {
 
     public static UserSession getInstace(String userName,String password, String privileges) {
         if(instance == null) {
-            instance = new UserSession(userName, password, privileges);
+            synchronized (UserSession.class) {
+                if(instance == null) {
+                    instance = new UserSession(userName,password,privileges);
+                }
+            }
         }
         return instance;
     }

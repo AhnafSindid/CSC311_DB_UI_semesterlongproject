@@ -2,6 +2,7 @@ package viewmodel;
 
 import dao.DbConnectivityClass;
 import javafx.application.Platform;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,13 +22,43 @@ import javafx.stage.Stage;
 import model.Person;
 import service.MyLogger;
 
+import javax.swing.event.ChangeListener;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class DB_GUI_Controller implements Initializable {
+
+    @FXML
+    Button deleteBtn;
+
+    @FXML
+    Button editBtn;
+
+    @FXML
+    Button addBtn;
+
+    @FXML
+    MenuItem editItem;
+
+    @FXML
+    MenuItem deleteItem;
+
+    @FXML
+    MenuItem ClearItem;
+
+    @FXML
+    MenuItem CopyItem;
+
+    @FXML
+    MenuItem impCSV;
+
+    @FXML
+    MenuItem expCSV;
 
     @FXML
     TextField first_name, last_name, department, major, email, imageURL;
@@ -54,9 +85,30 @@ public class DB_GUI_Controller implements Initializable {
             tv_major.setCellValueFactory(new PropertyValueFactory<>("major"));
             tv_email.setCellValueFactory(new PropertyValueFactory<>("email"));
             tv.setItems(data);
+
+            addBtn.setDisable(true);
+            first_name.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            last_name.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            department.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            major.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            email.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            imageURL.textProperty().addListener((observable, oldValue, newValue) -> checkFields());
+            checkFields();
+
+            editBtn.setDisable(true);
+            deleteBtn.setDisable(true);
+            tv.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+                editBtn.setDisable(false);
+                deleteBtn.setDisable(false);
+            });
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    protected void checkFields() {
+        boolean disable = first_name.getText().isEmpty() || last_name.getText().isEmpty()
+                || department.getText().isEmpty() || major.getText().isEmpty() || email.getText().isEmpty() || imageURL.getText().isEmpty();
+        addBtn.setDisable(disable);
     }
 
     @FXML
@@ -227,6 +279,16 @@ public class DB_GUI_Controller implements Initializable {
             this.lname = date;
             this.major = venue;
         }
+    }
+
+    @FXML
+    protected void importCSV() {
+
+    }
+
+    @FXML
+    protected void exportCSV() {
+
     }
 
 }

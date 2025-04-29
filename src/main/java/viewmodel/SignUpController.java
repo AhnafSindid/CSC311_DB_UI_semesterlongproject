@@ -27,4 +27,5 @@ public class SignUpController {
             e.printStackTrace();
         }
     }
+
 }
